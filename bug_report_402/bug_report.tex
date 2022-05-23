@@ -215,6 +215,17 @@ and gets the maximum value. An infinite loop happens.
   \label{fig::illustration}
 \end{figure}
 
+In conclusion, the problem arises because in our Pipeline algorithm
+every parallel line could have up to two workers running simultaneously.
+Although the two workers deal with different works, \texttt{on\_pipe}
+and scheduling,
+one worker tries to reset the join counter of the runtime task before returning,
+meanwhile the other worker updates the join counter because of its spawned
+Subflow tasks.
+The interleaving of reset and update leads to a data race and
+potentially results in an infinite loop.
+
+
 
 
 \section{Solution}
